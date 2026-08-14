@@ -14,12 +14,8 @@ function _update()
  if mode=="start" then
   update_startgame()
   
-  
  elseif mode=="game" then
   update_game()
-  
- elseif mode=="gameover" then
-  update_gameover()
   
  else
   mode="start"
@@ -29,18 +25,16 @@ end
 
 
 function _draw()
+ -- dibujo del juego
  if mode=="start" then
   draw_stargame()
-  
   
  elseif mode=="game" then
   draw_game()
   
- elseif mode=="gameover" then
-  draw_gameover()
-  
  else
   mode="start"
+  
  end
 
 end
@@ -89,16 +83,25 @@ function update_game()
  end
  
  -- movimiento pelota
- ball.x += ball.spd
+ ball.x += ball.spd*ball.dir
  
  
+ -- comprobacion gol p1
+ if ball.x > 128 then
+  p1.score += 1
+  ball.x = 64
+  ball.dir = -1
+ end
  
-
+  -- comprobacion gol p2
+ if ball.x < -8 then
+  p2.score += 1
+  ball.x = 64
+  ball.dir = 1
+ end
+ 
 end
 
-function update_gameover()
-
-end
 -->8
 -- draw
 
@@ -115,7 +118,7 @@ function draw_game()
  cls(1)
  blinktext("game",0,0, {10,12})
  
- 
+
  -- dibujo player1
  draw_spr(p1)
  
@@ -128,13 +131,8 @@ function draw_game()
  -- dibujo scores
  print(p1.score, 100, 2, 7)
  print(p2.score, 25, 2, 7)
- 
 end
 
-function draw_gameover()
- cls(0)
- blinktext("gameover",0,0, {10,12})
-end
 -->8
 -- init
 
@@ -166,8 +164,9 @@ function init_startgame()
  ball={
  x=64,
  y=64,
- spd=1,
+ spd=2,
  spr=3,
+ dir=1,
  w=1,
  h=1,
  col=7, 
