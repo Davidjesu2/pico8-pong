@@ -83,14 +83,36 @@ function update_game()
  end
  
  -- movimiento pelota
- ball.x += ball.spd*ball.dir
+ if collision(p1, ball) then
+  ball.dir = ball.dir * -1
+  ball.ang = 1 
+ end
  
+ if collision(p2, ball) then
+  ball.dir = ball.dir * -1
+  ball.ang = 1  
+ end
+
+ -- choque con techos
+ if ball.y <= 0  then
+  ball.ang = ball.ang * -1
+ end
+ 
+ if ball.y >= 122  then
+  ball.ang = ball.ang * -1
+ end
+ 
+ 
+
+ ball.x += ball.spd * ball.dir
+ ball.y += ball.ang 
  
  -- comprobacion gol p1
  if ball.x > 128 then
   p1.score += 1
   ball.x = 64
   ball.dir = -1
+  ball.ang = 0
  end
  
   -- comprobacion gol p2
@@ -98,6 +120,7 @@ function update_game()
   p2.score += 1
   ball.x = 64
   ball.dir = 1
+  ball.ang = 0
  end
  
 end
@@ -142,7 +165,7 @@ function init_startgame()
  p1={
  x=2,
  y=64,
- spd=4,
+ spd=3,
  spr=1,
  w=1,
  h=2,
@@ -151,9 +174,9 @@ function init_startgame()
  }
  
  p2={
- x=114,
+ x=112,
  y=64,
- spd=4,
+ spd=3,
  spr=1,
  w=1,
  h=2,
@@ -164,9 +187,10 @@ function init_startgame()
  ball={
  x=64,
  y=64,
- spd=2,
+ spd=4,
  spr=3,
  dir=1,
+ ang=0,
  w=1,
  h=1,
  col=7, 
@@ -188,8 +212,23 @@ end
 -- tools update
 
 function collision(a, b)
- -- pendiente
+ if a.x+6 < b.x then
+  return false
+ end
+ 
+ if a.x > b.x  then
+  return false
+ end
+ 
+ if a.y+15 < b.y then
+  return false
+ end
+ 
+ if a.y > b.y+7 then
+  return false
+ end
 
+ return true
 end
 __gfx__
 00000000777000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
